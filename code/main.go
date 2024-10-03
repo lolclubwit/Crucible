@@ -1,7 +1,3 @@
 package main
-
-import "log"
-
-func main() {
-	log.Println("Golang: Hello world")
-}
+ import "log"
+func main(){log.Println("Hello World")}

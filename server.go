@@ -29,21 +29,23 @@ func compile(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, err)
 	}
 
+	lang := -1
 	switch in.Langauge {
 	case "python":
-		code := []byte(in.Code)
-		err := os.WriteFile("code/main.py", code, 0644)
-		if err != nil {
-			log.Fatal("Can't write in code/main.py")
-		}
-		output, err := runner.Run(runner.PYTHON)
-		if err != nil {
-			fmt.Fprintln(w, err)
-		}
-		fmt.Fprintln(w, output)
+		lang = runner.PYTHON
+	case "golang":
+		lang = runner.GOLANG
 	default:
 		fmt.Fprintln(w, "Langauge not supported...")
+		return
 	}
+
+	output, err := runner.Run(lang, string(in.Code))
+	if err != nil {
+		log.Println(err)
+		fmt.Fprintln(w, "Internal Error")
+	}
+	fmt.Fprintln(w, output)
 }
 
 func main() {

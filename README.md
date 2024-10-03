@@ -64,8 +64,22 @@ This part will take the code from the client, run all the tests, and return the 
 
     ```bash
     make build
+    ```
+    This will build a docker image using the dockerfiles in compilers folder
+
+    ```bash
     make create
     ```
+    This will create container using the image we just build
+
+    ```bash
+    make start
+    ```
+    `make start` is use to start the compilers mean it will the start the container where the code is going to run each langauge will have there own container (maybe we will not need container for each langauge so need to changed later)
+    ```bash
+    make stop
+    ```
+    so stop these compiler container use `make stop`
 
     For testing, use:
 
@@ -78,3 +92,19 @@ This part will take the code from the client, run all the tests, and return the 
     ```bash
     go run server.go
     ```
+
+Now make Post request to port `http://localhost:8090`
+with the below json in the body
+```json
+{
+  "code": "print(\"Hello world!!!\")",
+  "language": "python"
+}
+```
+
+the server is expected to return the result after executing the code
+
+```
+Hello world!!!
+```
+

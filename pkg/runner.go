@@ -2,7 +2,8 @@ package runner
 
 import (
 	"errors"
-	"fmt"
+	"log"
+	"os"
 	"os/exec"
 )
 
@@ -11,28 +12,26 @@ const (
 	GOLANG
 )
 
-func Run(langauge int) (result string, err error) {
-	if err != nil {
-		fmt.Println("Error getting current directory:", err)
-		return
-	}
-
+func Run(langauge int, code string) (result string, err error) {
 	var cmd *exec.Cmd
 	switch langauge {
 	case PYTHON:
-		cmd = exec.Command("docker", "start", "-i", "python")
+		cmd = exec.Command("docker", "exec", "python", "python", "main.py")
+		err = os.WriteFile("code/main.py", []byte(code), 0644)
 	case GOLANG:
-		cmd = exec.Command("docker", "start", "-i", "golang")
+		cmd = exec.Command("docker", "exec", "golang", "go", "run", "main.go")
+		err = os.WriteFile("code/main.go", []byte(code), 0644)
 	default:
-		err = errors.New("language not supported")
+		err = errors.New("runner: language not supported")
 		return
 	}
 
-	output, err := cmd.Output()
 	if err != nil {
+		log.Println("Runner", err)
 		return
 	}
 
+	output, err := cmd.CombinedOutput()
 	result = string(output)
 	return
 }

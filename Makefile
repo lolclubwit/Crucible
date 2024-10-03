@@ -4,13 +4,21 @@ build:
 
 
 create:
-	docker create --name python -v $(CURDIR)/code:/app -t compiler-container-python python main.py
-	docker create --name golang -v $(CURDIR)/code:/app -t compiler-container-golang go run main.go
+	docker create --name python -v $(CURDIR)/code:/app -t compiler-container-python
+	docker create --name golang -v $(CURDIR)/code:/app -t compiler-container-golang
+
+start:
+	docker start python
+	docker start golang
+
+stop:
+	docker stop python
+	docker stop golang
 
 delete:
 	docker rm golang
 	docker rm python
 
 test:
-	docker start -i python
-	docker start -i golang
+	docker exec -it python python main.py
+	docker exec -it golang go run main.go
